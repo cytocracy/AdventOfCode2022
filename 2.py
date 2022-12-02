@@ -1,18 +1,13 @@
-#read from file and split by line
 with open('input/rpc.txt') as f:
     content = f.readlines()
 content = [x.strip() for x in content]
 
-#print all lines
 sum = 0
 
 for line in content:
     first = line.split(' ')[0]
-    # print(first)
     second = line.split(' ')[1]
-    # print(second)
     if second == "X":
-        #lose
         if first == "A":
             sum +=3
         if first == "B":
