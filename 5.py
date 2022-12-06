@@ -5,6 +5,8 @@ content = [x.strip() for x in content]
 stackstring = content[:10]
 moves = content[10:]
 
+print(content[0])
+
 stacks = []
 for i in range(0, 9):
     stacks.append([])
@@ -38,7 +40,7 @@ for move in moves:
     first = int(nums[1])
     second = int(nums[3])
     third = int(nums[5])
-    print(first, second, third)
+    # print(first, second, third)
     
     letters = []
     for i in range(0, first):
