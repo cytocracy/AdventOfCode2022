@@ -70,12 +70,6 @@ print("here")
 # for sensor in sensors:
 possible = set()
 
-
-
-
-
-
-
 def get_tuning():
     counter = 0
     possible = set()
@@ -93,27 +87,18 @@ def get_tuning():
         neededdistance = distance + 1
         for nx in range(x - neededdistance, x + neededdistance+1):
             if(0 <= nx <= 4000000):
-
-                dx = abs(x-nx)
-                distanceleft = neededdistance - dx
+                distanceleft = neededdistance - get_distance(x, y, nx, y)
                 y1 = y - distanceleft
                 y2 = y + distanceleft
                 if 0 <= y1 <= 4000000:
                     possible.add((nx,y1))
-                    # if can_exist(x, y1):
-                    #     return(x * 4000000 + y1)
-                        
-                    
                 if 0 <= y2 <= 4000000:
-                    # if x == 14 and y2 == 11:
-                    #     print("HEREEEEEE")
                     possible.add((nx,y2))
-                    # if can_exist(x, y2):
-                    #     return(x * 4000000 + y2) 
-
+                    
     print("len: " + str(len(possible)))
     for coord in possible:
         if can_exist(coord[0], coord[1]):
+            print(coord)
             return(coord[0] * 4000000 + coord[1])
 
                 
