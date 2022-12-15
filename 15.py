@@ -46,7 +46,7 @@ def get_distance(x1, y1, x2, y2):
 
 def can_exist(x, y):
     # if  (x, y) in beacons:
-    #     return True
+    #     return False
     for sensor in sensors:
         distance = get_distance(sensor.x, sensor.y, x, y)
         if distance <= get_distance(sensor.x, sensor.y, sensor.closex, sensor.closey):
@@ -68,41 +68,57 @@ print("here")
 
 #create list of sets of coords that can exist for each sensor
 # for sensor in sensors:
-possibles = []
+possible = set()
 
 
-for sensor in sensors:
-    x = sensor.x
-    y = sensor.y
-    closex = sensor.closex
-    closey = sensor.closey
 
-    possible = set()
-
-    dist = get_distance(x, y, closex, closey)
-    for i in range(x - dist, x + dist + 1):
-        tempy = y + dist - abs(x - i)
-        if (0 <= i <= 4000000) and (0 <= tempy <= 4000000):
-            possible.add((i, tempy))
-        tempy = y - (dist - abs(x - i))
-        if (0 <= i <= 4000000) and (0 <= tempy <= 4000000):
-            possible.add((i, tempy))
-    print(len(possible))
-    possibles.append(possible)
 
 
 
 
 def get_tuning():
-    #return intersection of all sets
-    for poss in possibles:
-        for tup in poss:
-            if can_exist(tup[0], tup[1]):
-                return(tup[0] * 4000000 + tup[1])
+    counter = 0
+    possible = set()
+
+    for sensor in sensors:
+        counter += 1
+        print("new sensor: " + str(counter))    
+        x = sensor.x
+        y = sensor.y
+        closex = sensor.closex
+        closey = sensor.closey
+
         
-    print()
-            
+        distance = get_distance(x, y, closex, closey)
+        neededdistance = distance + 1
+        for nx in range(x - neededdistance, x + neededdistance+1):
+            if(0 <= nx <= 4000000):
+
+                dx = abs(x-nx)
+                distanceleft = neededdistance - dx
+                y1 = y - distanceleft
+                y2 = y + distanceleft
+                if 0 <= y1 <= 4000000:
+                    possible.add((nx,y1))
+                    # if can_exist(x, y1):
+                    #     return(x * 4000000 + y1)
+                        
+                    
+                if 0 <= y2 <= 4000000:
+                    # if x == 14 and y2 == 11:
+                    #     print("HEREEEEEE")
+                    possible.add((nx,y2))
+                    # if can_exist(x, y2):
+                    #     return(x * 4000000 + y2) 
+
+    print("len: " + str(len(possible)))
+    for coord in possible:
+        if can_exist(coord[0], coord[1]):
+            return(coord[0] * 4000000 + coord[1])
+
+                
                
+
 # count = 0
 # for notcoord in notcoords:
 #     if notcoord[1] == 2000000:

@@ -16,8 +16,7 @@ for line in content:
             sum += 2
         
     elif second == "Y":
-        sum += 3
-        
+        sum += 3  
         if first == "A":
             sum += 1
         elif first == "B":
