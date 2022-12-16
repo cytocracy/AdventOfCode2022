@@ -17,12 +17,10 @@ for line in content:
     name = line.split()[1]
     value = line.split('=')[1].split(';')[0]
     children = []
-    #Valve AA has flow rate=0; tunnels lead to valves DD, II, BB
     if 'valves' in line:
         children = line.split('valves ')[1].split(', ')
     else:
         children = [line.split('tunnel leads to valve ')[1]]
-    
     namedict[name] = Node(name, value, children)
 
 def getNonZeroNodes():
