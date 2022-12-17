@@ -12,6 +12,7 @@ class Node:
     
 nodes = []
 namedict = {}
+DP = {}
 
 for line in content:
     name = line.split()[1]
@@ -54,6 +55,12 @@ def findPath(n1, n2):
                 parent[neighbor] = current
     
 paths = []
+allpaths = []
+
+for node in nodes:
+    for node2 in nodes:
+        if node != node2:
+            allpaths.append(findPath(node, node2))
 a_paths = []
 is_open = {}
 simvalues = {}
@@ -69,19 +76,23 @@ for node in getNonZeroNodes():
 
 
 def simulate(curr, timeLeft, is_open):
+        
     if curr == 'AA':
         vals = []
         for path in a_paths:
-            newtime = timeLeft - (len(path)-1) -1
-            if newtime < 1:
-                continue
-            temp_is_open = deepcopy(is_open)
-            temp_is_open[path[-1]] = True
-            simval = simulate(path[-1], timeLeft - (len(path)-1)-1, temp_is_open)
-            simnum = int(simval[0]) + int(namedict[path[-1]].value) * newtime
-            vals.append((simnum, simval[1] + [path[-1]]))
-            print([path[-1]] + simval[1])
+            if not is_open[path[-1]]:
+                newtime = timeLeft - (len(path)-1) -1
+                if newtime < 1:
+                    continue
+                temp_is_open = deepcopy(is_open)
+                temp_is_open[path[-1]] = True
+                simval = simulate(path[-1], timeLeft - (len(path)-1)-1, temp_is_open)
+                simnum = int(simval[0]) + int(namedict[path[-1]].value) * newtime
+                vals.append((simnum, simval[1] + [path[-1]]))
+                print([path[-1]] + simval[1])
 
+        if len(vals) == 0:
+            return (0, [])
         return max(vals, key=lambda x: x[0])
 
     possible = []
@@ -100,9 +111,79 @@ def simulate(curr, timeLeft, is_open):
                 possibleval = simval[0] + addedval
                 possiblepath = [nextvalve] + simval[1]
                 possible.append((possibleval, possiblepath))
+
     
     if len(possible) == 0:
         return (0, [])
     return max(possible, key=lambda x: x[0])
 
-print (simulate('AA', 30, is_open))
+def make_tuple(curr, timeLeft, is_open):
+    return (curr, timeLeft, is_open)
+    
+def sim_all(curr, timeLeft, is_open):
+
+    if timeLeft < 2:
+        return [(0, [])]
+    usize = ""
+    for node in is_open:
+        if is_open[node]:
+            usize += "1"
+        else:
+            usize += "0"
+    
+    key = hash(curr) * hash(timeLeft) * hash(usize)
+    # print(key)
+    # 
+    # key = hash(curr + str(timeLeft) + str(usize))
+    if key in DP:
+        return DP[key]
+        # pass
+    possible = []
+    
+    for neighbor in get_neighbors(curr):
+        nextvalve = neighbor
+        
+        value = namedict[nextvalve].value
+        if value != '0' and not is_open[nextvalve]:
+            newtime = timeLeft - 2
+            if newtime < 1:
+                continue
+            addedval = int(newtime) * int(value)
+        
+            temp_is_open = deepcopy(is_open)
+            temp_is_open[nextvalve] = True
+        else:
+            newtime = timeLeft - 1
+            if newtime < 1:
+                continue
+            addedval = 0
+            temp_is_open = deepcopy(is_open)
+        
+        simval = sim_all(nextvalve, newtime, temp_is_open)
+        for sim in simval:
+            possibleval = sim[0] + addedval
+            possiblepath = [nextvalve] + sim[1]
+            
+            possible.append((possibleval, possiblepath))
+            # print("newposs")
+
+    DP[key] = possible
+    print(len(possible))
+    return possible
+
+def sim_both(curr, timeLeft, is_open):
+    vals = []
+    firstsims = sim_all(curr, timeLeft, is_open)
+    print(len(firstsims))
+    for sim in firstsims:
+        print("newsim")
+        second_is_open = deepcopy(is_open)
+        for node in sim[1]:
+            second_is_open[node] = True
+        secondsims = sim_all(curr, timeLeft, second_is_open)
+        vals.append(sim[0] + max(secondsims, key=lambda x: x[0])[0])
+    return max(vals)
+
+
+
+print(simulate('AA', 30, is_open))
