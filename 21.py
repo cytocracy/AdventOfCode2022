@@ -37,10 +37,10 @@ def find_n(str, expected):
             newexpect = expected / get_val(name1)
             return find_n(name2, newexpect)
         elif operator == '-':
-            newexpect = expected + get_val(name1)
+            newexpect = get_val(name1) - expected
             return find_n(name2, newexpect)
         elif operator == '/':
-            newexpect = expected * get_val(name1)
+            newexpect = get_val(name1) / expected
             return find_n(name2, newexpect)
 
 
