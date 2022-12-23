@@ -20,6 +20,8 @@ def split_instructions(instructions):
 
 instructions = split_instructions(instructions)
 
+# print(instructions[-1])
+
 def get_direction(turn, direction):
     if turn == 'R':
         if direction == RIGHT:
@@ -53,12 +55,12 @@ def move():
                 if new in coords:
                     if coords[new] == '#':
                         break
-                    # print(new)
-                else:
+                    else:
+                        curr = new
+                else: #wrap
                     print('wrap')
                     val = wrapped_coords[(curr[0], curr[1], direction)]
                     new = (val[0], val[1])
-                    
                     
                     # if direction == RIGHT:
                     #     new = (get_coords(curr[0])[0])
@@ -71,10 +73,12 @@ def move():
 
                     if coords[new] == '#':
                         break
-                    else :
+                    else:
+                        assert coords[new] == '.'
+                        curr = new
                         direction = val[2]
-                    # print(new)
-                curr = new
+                print(curr)
+                
                 
             # print(curr)
 
@@ -94,14 +98,14 @@ def get_wrapped_coords():
     for i in range(0,50):
         wrapped_coords[(0, i+50, UP)] = (i+150, 0, RIGHT)
         wrapped_coords[(0, i+100, UP)] = (199, i, UP)
-        wrapped_coords[(i, 149, RIGHT)] = (149-i, 99, LEFT)
+        wrapped_coords[(i, 149, RIGHT)] = (149-i, 99, LEFT) 
         wrapped_coords[(49, i+100, DOWN)] = (i+50, 99, LEFT)
         wrapped_coords[(i+50, 99, RIGHT)] = (49, i+100, UP)
         wrapped_coords[(i+100, 99, RIGHT)] = (49-i, 149, LEFT)
-        wrapped_coords[(149, i+50, DOWN)] = (49, i+100, LEFT)
+        wrapped_coords[(149, i+50, DOWN)] = (i+150, 49, LEFT)
         wrapped_coords[(i+150, 49, RIGHT)] = (149, i+50, UP)
-        wrapped_coords[(199, i, DOWN)] = (0, i+100, DOWN)
-        wrapped_coords[(150+i, 0, LEFT)] = (0, i+50, RIGHT)
+        wrapped_coords[(199, i, DOWN)] = (0, 100+i, DOWN)
+        wrapped_coords[(150+i, 0, LEFT)] = (0, i+50, DOWN)
         wrapped_coords[(100+i, 0, LEFT)] = (49-i,50, RIGHT)
         wrapped_coords[(100, i, UP)] = (i+50, 50, RIGHT)
         wrapped_coords[(i+50, 50, LEFT)] = (100, i, DOWN)
@@ -151,7 +155,13 @@ elif dir == LEFT:
 elif dir == UP:
     second += 3
 
+'''
+109 99 1
+110400
+'''
+
+print(wrapped_coords[(199, 3, DOWN)])
+print(wrapped_coords[(20,50,LEFT)])
+
+
 print(first + second)
-
-
-
