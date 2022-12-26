@@ -116,17 +116,19 @@ def manhattan(pos1, pos2):
     return abs(r1-r2) + abs(c1-c2)
 
 def bfs(start=(0,1), end=(bottom_r, right_c-1), time=0):
+    SEEN = set()
     print("end", end)
-    queue = [(start,0)]
-    parent = {(start,0): None}
-    visited = set((start,0))
+    queue = [(start,time)]
+    parent = {(start, time): None}
+    visited = set((start,time))
     while queue:
         node = queue.pop(0)
         # if node[1] > 100:
         #     break
-        print(node)
+        # print(node)
         # print("pop")
         if node[0] == end:
+
             curr = node
             path = []
             while curr != None:
@@ -137,17 +139,27 @@ def bfs(start=(0,1), end=(bottom_r, right_c-1), time=0):
 
         for neighbor in neighbors(node):
             if neighbor not in visited:
+                # if manhattan(neighbor[0], end) > 75 and neighbor[1] - time > 100:
+                #     continue
                 visited.add(neighbor)
                 parent[neighbor] = node
                 queue.append(neighbor)
 
-        queue = sorted(queue, key=lambda x: manhattan(x[0], end))
-        queue = sorted(queue, key=lambda x: x[1])
+        # queue = sorted(queue, key=lambda x: x[1])
+        # queue = sorted(queue, key=lambda x: manhattan(x[0], end))
 
-print(len(walls))
-path = bfs()
+
+# print(len(walls))
+# path = bfs()
 # print(path)
-print(len(path)-1)
+firststep = 249
+print(firststep)
+path2 = bfs((bottom_r, right_c-1), (0,1), firststep)
+# print(path2)
+secondstep = len(path2)-1
+print(secondstep)
+path3 = bfs(time=firststep+secondstep)
+thirdstep = len(path3)-1
+print(thirdstep)
 
-# print_blizzards(18)
-
+print(firststep+secondstep+thirdstep)
